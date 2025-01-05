@@ -1,11 +1,11 @@
 local stopSignModel = GetHashKey("prop_sign_road_01a") 
 local hasStopSignInHand = false 
-local stopSignObject = nil 
+local stopSignObject
 
 
 function DrawText3D(x, y, z, text)
     local onScreen, _x, _y = World3dToScreen2d(x, y, z)
-    local px, py, pz = table.unpack(GetGameplayCamCoords())
+    local px, py, pz = GetGameplayCamCoords()
     SetTextScale(0.35, 0.35)
     SetTextFont(4)
     SetTextProportional(1)
@@ -17,11 +17,11 @@ function DrawText3D(x, y, z, text)
     DrawRect(_x, _y + 0.0125, 0.015 + factor, 0.03, 0, 0, 0, 75)
 end
 
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
-        Citizen.Wait(0)
+        Wait(0)
         local playerCoords = GetEntityCoords(PlayerPedId())
-        local closestStopSign = nil
+        local closestStopSign
         local closestDistance = 2.0
 
         
@@ -44,7 +44,7 @@ Citizen.CreateThread(function()
 
             if IsControlJustPressed(1, 51) then -- E-Taste
                 TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
-                Citizen.Wait(5000) 
+                Wait(5000) 
                 ClearPedTasks(PlayerPedId())
                 SetEntityAsMissionEntity(closestStopSign, true, true)
                 DeleteObject(closestStopSign)
@@ -53,7 +53,7 @@ Citizen.CreateThread(function()
                 RequestAnimDict("anim@heists@box_carry@")
                 RequestModel(stopSignModel)
                 while not HasAnimDictLoaded("anim@heists@box_carry@") or not HasModelLoaded(stopSignModel) do
-                    Citizen.Wait(100)
+                    Wait(100)
                 end
 
                 
